@@ -15,6 +15,7 @@ class PasswordStatusView: UIView {
     let lowerCaseCriteriaView = PasswordCriteriaView(text: "lowercase (a-z)")
     let digitCriteriaView = PasswordCriteriaView(text: "digit (0-9)")
     let specialCharacterCriteriaView = PasswordCriteriaView(text: "special character (e.g. !@#$%^)")
+    private var shouldResetCriteria: Bool = true
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -84,5 +85,38 @@ extension PasswordStatusView {
             trailingAnchor.constraint(equalToSystemSpacingAfter: stackView.trailingAnchor, multiplier: 2),
             bottomAnchor.constraint(equalToSystemSpacingBelow: stackView.bottomAnchor, multiplier: 2)
         ])
+    }
+}
+
+// MARK: Actions
+extension PasswordStatusView {
+    func updateDisplay(_ text: String) {
+        let lengthAndNoSpaceMet = PasswordCriteria.lengthAndNoSpaceMet(text)
+        let uppercaseMet = PasswordCriteria.uppercaseMet(text)
+        let lowercaseMet = PasswordCriteria.lowercaseMet(text)
+        let digitMet = PasswordCriteria.digitMet(text)
+        let specialCharacterMet = PasswordCriteria.specialCharacterMet(text)
+        
+        if shouldResetCriteria {
+            lengthAndNoSpaceMet
+                ? lengthCriteriaView.isCriteriaMet = true
+                : lengthCriteriaView.reset()
+            
+            uppercaseMet
+                ? uppercaseCriteriaView.isCriteriaMet = true
+                : uppercaseCriteriaView.reset()
+            
+            lowercaseMet
+                ? lowerCaseCriteriaView.isCriteriaMet = true
+                : lowerCaseCriteriaView.reset()
+
+            digitMet
+                ? digitCriteriaView.isCriteriaMet = true
+                : digitCriteriaView.reset()
+            
+            specialCharacterMet
+                ? specialCharacterCriteriaView.isCriteriaMet = true
+                : specialCharacterCriteriaView.reset()
+        }
     }
 }

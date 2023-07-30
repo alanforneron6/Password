@@ -10,7 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     let stackView = UIStackView()
     let statusView = PasswordStatusView()
-    let passwordTextfield = PasswordTextField(placeHolderText: "New password")
+    let newPasswordTextfield = PasswordTextField(placeHolderText: "New password")
     let confirmPasswordTextfield = PasswordTextField(placeHolderText: "Re-enter new password")
     let resetButton = UIButton(type: .system)
     
@@ -31,7 +31,8 @@ extension ViewController {
         stackView.axis = .vertical
         stackView.spacing = 20
         
-        passwordTextfield.translatesAutoresizingMaskIntoConstraints = false
+        newPasswordTextfield.translatesAutoresizingMaskIntoConstraints = false
+        newPasswordTextfield.delegate = self
         confirmPasswordTextfield.translatesAutoresizingMaskIntoConstraints = false
         
         resetButton.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +44,7 @@ extension ViewController {
     
     func layout() {
         view.addSubview(stackView)
-        stackView.addArrangedSubview(passwordTextfield)
+        stackView.addArrangedSubview(newPasswordTextfield)
         stackView.addArrangedSubview(statusView)
         stackView.addArrangedSubview(confirmPasswordTextfield)
         stackView.addArrangedSubview(resetButton)
@@ -56,3 +57,10 @@ extension ViewController {
     }
 }
 
+extension ViewController: PasswordTextFieldDelegate {
+    func editingChanged(_ sender: PasswordTextField) {
+        if sender === newPasswordTextfield {
+            statusView.updateDisplay(sender.textField.text ?? "")
+        }
+    }
+}
